@@ -10,8 +10,14 @@ import {
 } from "../api";
 
 const Search = (props) => {
-  // Make sure to destructure setIsLoading and setSearchResults from the props
+  const { setIsLoading, setSearchResults } = props;
 
+  // Make sure to destructure setIsLoading and setSearchResults from the props
+  const [centuryList, setCenturyList] = useState([]);
+  const [classificationList, setClassificationList] = useState([]);
+  const [queryString, setQueryString] = useState("");
+  const [century, setCentury] = useState("any");
+  const [classification, setClassification] = useState("any");
   /**
    * We are at the Search component, a child of app. This has a form, so we need to use useState for
    * our controlled inputs:
@@ -30,7 +36,14 @@ const Search = (props) => {
    *
    * Make sure to console.error on caught errors from the API methods.
    */
-  useEffect(() => {}, []);
+  useEffect(() => {
+    Promise.all([fetchAllCenturies(), fetchAllClassifications()]).then(
+      (result) => {
+        setCenturyList(result[0]);
+        setClassificationList(result[1]);
+      }
+    );
+  }, []);
 
   /**
    * This is a form element, so we need to bind an onSubmit handler to it which:
